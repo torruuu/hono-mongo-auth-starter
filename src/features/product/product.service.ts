@@ -1,14 +1,15 @@
+import { ProductModel } from '@/core/db/mongoose/product.model.js'
 import type { CreateProduct, Product } from '@/features/product/product.types.js'
-import { prisma } from '@/integrations/database/config.js'
 
-export function getAllProducts(): Promise<Product[]> {
-  return prisma.product.findMany()
+export async function getAllProducts(): Promise<Product[]> {
+  return ProductModel.find().lean()
 }
 
-export function getProductById(id: number): Promise<Product | null> {
-  return prisma.product.findUnique({ where: { id } })
+export async function getProductById(id: string): Promise<Product | null> {
+  return ProductModel.findById(id).lean()
 }
 
-export function createProduct(data: CreateProduct): Promise<Product> {
-  return prisma.product.create({ data })
+export async function createProduct(data: CreateProduct): Promise<Product> {
+  const product = await ProductModel.create(data)
+  return product.toObject()
 }

@@ -1,8 +1,5 @@
-import type {
-  Prisma,
-  Product as PrismaProduct,
-} from '@/core/db/generated/prisma/client.js'
+import type { IProduct } from '@/core/db/mongoose/product.model.js'
 
-export type Product = PrismaProduct
+export type Product = IProduct
 
-export type CreateProduct = Prisma.ProductCreateInput
+export type CreateProduct = Omit<IProduct, '_id'>

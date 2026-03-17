@@ -1,8 +1,10 @@
-import env from '@/env'
-import { prisma } from '@/integrations/database/config.js'
+import env from '@/env.js'
+import { getClient } from '@/integrations/database/config.js'
+import { mongodbAdapter } from '@better-auth/mongo-adapter'
 import { betterAuth } from 'better-auth'
-import { prismaAdapter } from 'better-auth/adapters/prisma'
 import { openAPI } from 'better-auth/plugins'
+
+const client = await getClient()
 
 export const auth = betterAuth({
   basePath: '/auth',
@@ -13,7 +15,7 @@ export const auth = betterAuth({
   session: {
     cookieCache: {
       enabled: true,
-      maxAge: 60 * 5, // 5 minutes
+      maxAge: 60 * 5,
     },
   },
   plugins: [
@@ -21,7 +23,5 @@ export const auth = betterAuth({
       disableDefaultReference: true,
     }),
   ],
-  database: prismaAdapter(prisma, {
-    provider: 'postgresql',
-  }),
+  database: mongodbAdapter(client),
 })
